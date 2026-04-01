@@ -1,4 +1,4 @@
-export const API_URL = 'http://localhost:5000/api';
+export const API_URL = `http://${window.location.hostname}:5000/api`;
 
 export const getAuthToken = () => {
   const user = JSON.parse(localStorage.getItem('auth_user'));

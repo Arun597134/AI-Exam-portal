@@ -1,4 +1,7 @@
-export const API_URL = `http://${window.location.hostname}:5000/api`;
+const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+export const API_URL = isLocal
+  ? 'http://localhost:5000/api'
+  : 'https://ai-exam-portal-1.onrender.com/api';
 
 export const getAuthToken = () => {
   const user = JSON.parse(localStorage.getItem('auth_user'));

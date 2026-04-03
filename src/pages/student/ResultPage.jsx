@@ -26,113 +26,130 @@ const downloadCertificate = (result) => {
   canvas.height = 850;
   const ctx = canvas.getContext('2d');
 
-  ctx.fillStyle = '#ffffff';
+  // Subtle Premium Background
+  const gradient = ctx.createLinearGradient(0, 0, 1200, 850);
+  gradient.addColorStop(0, '#f8fafc');
+  gradient.addColorStop(1, '#e2e8f0');
+  ctx.fillStyle = gradient;
   ctx.fillRect(0, 0, 1200, 850);
 
-  ctx.strokeStyle = '#4f46e5';
-  ctx.lineWidth = 6;
+  // Outer Border (Thick Dark Blue)
+  ctx.strokeStyle = '#0f172a';
+  ctx.lineWidth = 10;
   ctx.strokeRect(30, 30, 1140, 790);
 
-  ctx.strokeStyle = '#e2e8f0';
+  // Inner Border (Thin Gold)
+  ctx.strokeStyle = '#b45309';
   ctx.lineWidth = 2;
   ctx.strokeRect(45, 45, 1110, 760);
 
-  const drawCorner = (x, y, dx, dy) => {
+  // Corner Accents
+  ctx.fillStyle = '#0f172a';
+  const drawCorner = (x, y) => {
     ctx.beginPath();
-    ctx.moveTo(x, y + dy * 40);
-    ctx.lineTo(x, y);
-    ctx.lineTo(x + dx * 40, y);
-    ctx.strokeStyle = '#4f46e5';
-    ctx.lineWidth = 4;
-    ctx.stroke();
+    ctx.arc(x, y, 8, 0, Math.PI * 2);
+    ctx.fill();
   };
-  drawCorner(50, 50, 1, 1);
-  drawCorner(1150, 50, -1, 1);
-  drawCorner(50, 800, 1, -1);
-  drawCorner(1150, 800, -1, -1);
+  drawCorner(45, 45);
+  drawCorner(1155, 45);
+  drawCorner(45, 805);
+  drawCorner(1155, 805);
 
+  // Header Category
   ctx.fillStyle = '#64748b';
-  ctx.font = '500 16px Inter, sans-serif';
+  ctx.font = '600 16px Inter, sans-serif';
   ctx.textAlign = 'center';
-  ctx.fillText('AI EXAM PLATFORM', 600, 110);
+  ctx.letterSpacing = '4px';
+  ctx.fillText('A I   E X A M   P L A T F O R M', 600, 120);
 
+  // Ribbon Header
+  ctx.fillStyle = '#b45309';
+  ctx.font = 'italic 20px serif';
+  ctx.fillText('This certifies that', 600, 240);
+
+  // Main Title
+  ctx.fillStyle = '#0f172a';
+  ctx.font = 'bold 54px Georgia, serif';
+  ctx.fillText('CERTIFICATE OF ACHIEVEMENT', 600, 190);
+
+  // Student Name
+  ctx.fillStyle = '#1e3a8a';
+  ctx.font = 'bold 46px Georgia, serif';
+  ctx.fillText(result.studentName || 'Student Name', 600, 310);
+
+  // Underline
   ctx.beginPath();
-  ctx.arc(600, 170, 30, 0, Math.PI * 2);
-  ctx.fillStyle = '#fbbf24';
-  ctx.fill();
-  ctx.fillStyle = '#ffffff';
-  ctx.font = 'bold 28px serif';
-  ctx.fillText('★', 600, 180);
-
-  ctx.fillStyle = '#1e293b';
-  ctx.font = 'bold 42px Georgia, serif';
-  ctx.fillText('Certificate of Achievement', 600, 260);
-
-  ctx.beginPath();
-  ctx.moveTo(350, 285);
-  ctx.lineTo(850, 285);
-  ctx.strokeStyle = '#4f46e5';
-  ctx.lineWidth = 2;
+  ctx.moveTo(350, 330);
+  ctx.lineTo(850, 330);
+  ctx.strokeStyle = '#cbd5e1';
+  ctx.lineWidth = 1;
   ctx.stroke();
 
-  ctx.fillStyle = '#64748b';
-  ctx.font = '400 18px Inter, sans-serif';
-  ctx.fillText('This is to certify that', 600, 330);
+  // Completion Text
+  ctx.fillStyle = '#475569';
+  ctx.font = 'italic 20px serif';
+  ctx.fillText('has successfully completed the assessment', 600, 380);
 
-  ctx.fillStyle = '#4f46e5';
+  // Exam Title
+  ctx.fillStyle = '#0f172a';
   ctx.font = 'bold 36px Georgia, serif';
-  ctx.fillText(result.studentName || 'Student', 600, 385);
+  ctx.fillText(`"${result.examTitle || 'Online Assessment'}"`, 600, 440);
 
+  // Details Badge (Center)
+  ctx.fillStyle = '#ffffff';
+  ctx.shadowColor = 'rgba(0, 0, 0, 0.05)';
+  ctx.shadowBlur = 10;
+  ctx.shadowOffsetY = 4;
   ctx.beginPath();
-  ctx.moveTo(300, 400);
-  ctx.lineTo(900, 400);
+  ctx.roundRect(380, 490, 440, 135, 12);
+  ctx.fill();
+  
+  // Details Badge Borders
+  ctx.shadowColor = 'transparent';
   ctx.strokeStyle = '#e2e8f0';
   ctx.lineWidth = 1;
   ctx.stroke();
 
+  // Score
+  ctx.fillStyle = '#0f172a';
+  ctx.font = 'bold 24px Inter, sans-serif';
+  ctx.fillText(`Final Score: ${result.score}%`, 600, 535);
+
+  // Awarded Date & Integrity
+  const dateStr = result.submittedAt ? new Date(result.submittedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A';
+  const intLabel = (result.cheatingScore || 0) === 0 ? 'Clean Record' : `Integrity: ${100 - (result.cheatingScore || 0)}%`;
+
   ctx.fillStyle = '#475569';
-  ctx.font = '400 18px Inter, sans-serif';
-  ctx.fillText('has successfully passed the assessment', 600, 450);
+  ctx.font = '500 15px Inter, sans-serif';
+  ctx.fillText(`Awarded on: ${dateStr}   |   ${intLabel}`, 600, 570);
 
-  ctx.fillStyle = '#1e293b';
-  ctx.font = 'bold 28px Georgia, serif';
-  ctx.fillText(`"${result.examTitle || 'Online Exam'}"`, 600, 500);
-
-  ctx.fillStyle = '#475569';
-  ctx.font = '400 16px Inter, sans-serif';
-  ctx.fillText(`with a score of ${result.score}%`, 600, 545);
-
-  const badgeWidth = 120;
-  const badgeX = 600 - badgeWidth / 2;
-  ctx.fillStyle = '#10b981';
-  ctx.beginPath();
-  ctx.roundRect(badgeX, 560, badgeWidth, 34, 17);
-  ctx.fill();
-  ctx.fillStyle = '#ffffff';
-  ctx.font = 'bold 14px Inter, sans-serif';
-  ctx.fillText(`SCORE: ${result.score}%`, 600, 582);
-
-  const dateStr = new Date(result.submittedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  // Certificate ID
   ctx.fillStyle = '#64748b';
-  ctx.font = '400 14px Inter, sans-serif';
-  ctx.fillText(`Date: ${dateStr}`, 600, 640);
-  ctx.fillText(`Questions: ${result.correctAnswers || '—'}/${result.totalQuestions || '—'} correct`, 600, 665);
+  ctx.font = '400 13px Inter, sans-serif';
+  ctx.fillText(`Certificate ID: ${result.id}`, 600, 600);
 
-  const intLabel = (result.cheatingScore || 0) === 0 ? 'Clean Exam — No Violations' : `Integrity: ${100 - (result.cheatingScore || 0)}%`;
-  ctx.fillStyle = (result.cheatingScore || 0) === 0 ? '#10b981' : '#f59e0b';
-  ctx.font = '500 13px Inter, sans-serif';
-  ctx.fillText(`🛡️ ${intLabel}`, 600, 695);
+  // Lower Emblem / Seal
+  const emblemY = 700;
+  ctx.beginPath();
+  ctx.arc(600, emblemY, 35, 0, Math.PI * 2);
+  ctx.fillStyle = '#b45309';
+  ctx.fill();
 
-  ctx.beginPath(); ctx.moveTo(200, 760); ctx.lineTo(450, 760);
-  ctx.strokeStyle = '#cbd5e1'; ctx.lineWidth = 1; ctx.stroke();
-  ctx.fillStyle = '#64748b'; ctx.font = '400 12px Inter, sans-serif';
-  ctx.fillText('AI Exam Platform', 325, 780);
+  ctx.beginPath();
+  ctx.arc(600, emblemY, 28, 0, Math.PI * 2);
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([3, 3]);
+  ctx.stroke();
+  ctx.setLineDash([]);
 
-  ctx.beginPath(); ctx.moveTo(750, 760); ctx.lineTo(1000, 760); ctx.stroke();
-  ctx.fillText('Authorized Signature', 875, 780);
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 24px serif';
+  ctx.fillText('★', 600, emblemY + 8);
 
-  ctx.fillStyle = '#94a3b8'; ctx.font = '400 10px Inter, sans-serif';
-  ctx.fillText(`Certificate ID: ${result.id}`, 600, 815);
+  ctx.fillStyle = '#cbd5e1';
+  ctx.font = '700 12px Inter, sans-serif';
+  ctx.fillText('VERIFIED EXAM', 600, emblemY + 55);
 
   const link = document.createElement('a');
   link.download = `Certificate_${result.studentName?.replace(/\s+/g, '_') || 'Student'}.png`;

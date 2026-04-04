@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate Preview</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #1e293b;
+            margin: 0;
+            font-family: sans-serif;
+        }
+        canvas {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            max-width: 90vw;
+            max-height: 90vh;
+            object-fit: contain;
+        }
+        .controls {
+            position: absolute;
+            top: 20px;
+            text-align: center;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <h2>Certificate Preview</h2>
+        <p>This is precisely how the newly designed canvas certificate from the codebase will render.</p>
+    </div>
+    <canvas id="certCanvas" width="1200" height="850"></canvas>
+
+    <script>
+        const result = {
+            studentName: "John Doe",
+            examTitle: "Advanced AI Ethics",
+            score: 95,
+            submittedAt: new Date().toISOString(),
+            cheatingScore: 0,
+            id: "CERT-987654321A"
+        };
+
+        const canvas = document.getElementById('certCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Load college logo image first, then draw everything
+        const collegeLogo = new Image();
+        collegeLogo.src = 'public/college brand banner.jpg';
+        collegeLogo.onload = () => { drawCertificate(); };
+        collegeLogo.onerror = () => { drawCertificate(); }; // Draw without logo if not found
+
+        function drawCertificate() {
+        // Subtle Premium Background
+        const gradient = ctx.createLinearGradient(0, 0, 1200, 850);
+        gradient.addColorStop(0, '#f8fafc');
+        gradient.addColorStop(1, '#e2e8f0');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, 1200, 850);
+
+        // Outer Border (Thick Dark Blue)
+        ctx.strokeStyle = '#0f172a';
+        ctx.lineWidth = 10;
+        ctx.strokeRect(30, 30, 1140, 790);
+
+        // Inner Border (Thin Gold)
+        ctx.strokeStyle = '#b45309';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(45, 45, 1110, 760);
+
+        // Corner Accents
+        ctx.fillStyle = '#0f172a';
+        const drawCorner = (x, y) => {
+            ctx.beginPath();
+            ctx.arc(x, y, 8, 0, Math.PI * 2);
+            ctx.fill();
+        };
+        drawCorner(45, 45);
+        drawCorner(1155, 45);
+        drawCorner(45, 805);
+        drawCorner(1155, 805);
+
+        // College Logo Image (replaces text header)
+        if (collegeLogo.complete && collegeLogo.naturalWidth > 0) {
+            const maxLogoWidth = 750;
+            const maxLogoHeight = 100;
+            const scale = Math.min(maxLogoWidth / collegeLogo.naturalWidth, maxLogoHeight / collegeLogo.naturalHeight);
+            const logoWidth = collegeLogo.naturalWidth * scale;
+            const logoHeight = collegeLogo.naturalHeight * scale;
+            ctx.drawImage(collegeLogo, 600 - logoWidth / 2, 60, logoWidth, logoHeight);
+        } else {
+            ctx.fillStyle = '#64748b';
+            ctx.font = '600 16px Inter, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.letterSpacing = '4px';
+            ctx.fillText('A I   E X A M   P L A T F O R M', 600, 120);
+        }
+
+        // Ribbon Header
+        ctx.fillStyle = '#b45309';
+        ctx.font = 'italic 20px serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('This certifies that', 600, 270);
+
+        // Main Title
+        ctx.fillStyle = '#0f172a';
+        ctx.font = 'bold 46px Georgia, serif';
+        ctx.fillText('Intro to AI/ML Workshop', 600, 225);
+
+        // Student Name
+        ctx.fillStyle = '#1e3a8a';
+        ctx.font = 'bold 46px Georgia, serif';
+        ctx.fillText(result.studentName, 600, 340);
+
+        // Underline
+        ctx.beginPath();
+        ctx.moveTo(350, 360);
+        ctx.lineTo(850, 360);
+        ctx.strokeStyle = '#cbd5e1';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // Completion Text
+        ctx.fillStyle = '#475569';
+        ctx.font = 'italic 20px serif';
+        ctx.fillText('has successfully completed the assessment', 600, 410);
+
+        // Exam Title
+        ctx.fillStyle = '#0f172a';
+        ctx.font = 'bold 36px Georgia, serif';
+        ctx.fillText(`"${result.examTitle}"`, 600, 470);
+
+        // Details Badge (Center)
+        ctx.fillStyle = '#ffffff';
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.05)';
+        ctx.shadowBlur = 10;
+        ctx.shadowOffsetY = 4;
+        ctx.beginPath();
+        ctx.roundRect(380, 520, 440, 135, 12);
+        ctx.fill();
+        
+        // Details Badge Borders
+        ctx.shadowColor = 'transparent';
+        ctx.strokeStyle = '#e2e8f0';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        // Score
+        ctx.fillStyle = '#0f172a';
+        ctx.font = 'bold 24px Inter, sans-serif';
+        ctx.fillText(`Final Score: ${result.score}%`, 600, 565);
+
+        // Awarded Date & Integrity
+        const dateStr = result.submittedAt ? new Date(result.submittedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A';
+        const intLabel = (result.cheatingScore || 0) === 0 ? 'Clean Record' : `Integrity: ${100 - (result.cheatingScore || 0)}%`;
+
+        ctx.fillStyle = '#475569';
+        ctx.font = '500 15px Inter, sans-serif';
+        ctx.fillText(`Awarded on: ${dateStr}   |   ${intLabel}`, 600, 600);
+
+        // Certificate ID
+        ctx.fillStyle = '#64748b';
+        ctx.font = '400 13px Inter, sans-serif';
+        ctx.fillText(`Certificate ID: ${result.id}`, 600, 630);
+
+        // Lower Emblem / Seal
+        const emblemY = 700;
+        ctx.beginPath();
+        ctx.arc(600, emblemY, 35, 0, Math.PI * 2);
+        ctx.fillStyle = '#b45309';
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(600, emblemY, 28, 0, Math.PI * 2);
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([3, 3]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 24px serif';
+        ctx.fillText('★', 600, emblemY + 8);
+
+        ctx.fillStyle = '#cbd5e1';
+        ctx.font = '700 12px Inter, sans-serif';
+        ctx.fillText('VERIFIED EXAM', 600, emblemY + 55);
+        }
+    </script>
+</body>
+</html>

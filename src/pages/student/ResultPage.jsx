@@ -21,66 +21,80 @@ const generateFeedback = (question, options, correctAnswer, studentAnswer) => {
 
 // Certificate download using Canvas
 const downloadCertificate = (result) => {
-  const canvas = document.createElement('canvas');
-  canvas.width = 1200;
-  canvas.height = 850;
-  const ctx = canvas.getContext('2d');
+  const collegeLogo = new Image();
+  collegeLogo.src = '/college brand banner.jpg';
 
-  // Subtle Premium Background
-  const gradient = ctx.createLinearGradient(0, 0, 1200, 850);
-  gradient.addColorStop(0, '#f8fafc');
-  gradient.addColorStop(1, '#e2e8f0');
-  ctx.fillStyle = gradient;
-  ctx.fillRect(0, 0, 1200, 850);
+  const drawAndDownload = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 1200;
+    canvas.height = 850;
+    const ctx = canvas.getContext('2d');
 
-  // Outer Border (Thick Dark Blue)
-  ctx.strokeStyle = '#0f172a';
-  ctx.lineWidth = 10;
-  ctx.strokeRect(30, 30, 1140, 790);
+    // Subtle Premium Background
+    const gradient = ctx.createLinearGradient(0, 0, 1200, 850);
+    gradient.addColorStop(0, '#f8fafc');
+    gradient.addColorStop(1, '#e2e8f0');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, 1200, 850);
 
-  // Inner Border (Thin Gold)
-  ctx.strokeStyle = '#b45309';
-  ctx.lineWidth = 2;
-  ctx.strokeRect(45, 45, 1110, 760);
+    // Outer Border (Thick Dark Blue)
+    ctx.strokeStyle = '#0f172a';
+    ctx.lineWidth = 10;
+    ctx.strokeRect(30, 30, 1140, 790);
 
-  // Corner Accents
-  ctx.fillStyle = '#0f172a';
-  const drawCorner = (x, y) => {
-    ctx.beginPath();
-    ctx.arc(x, y, 8, 0, Math.PI * 2);
-    ctx.fill();
-  };
-  drawCorner(45, 45);
-  drawCorner(1155, 45);
-  drawCorner(45, 805);
-  drawCorner(1155, 805);
+    // Inner Border (Thin Gold)
+    ctx.strokeStyle = '#b45309';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(45, 45, 1110, 760);
 
-  // Header Category
-  ctx.fillStyle = '#64748b';
-  ctx.font = '600 16px Inter, sans-serif';
-  ctx.textAlign = 'center';
-  ctx.letterSpacing = '4px';
-  ctx.fillText('A I   E X A M   P L A T F O R M', 600, 120);
+    // Corner Accents
+    ctx.fillStyle = '#0f172a';
+    const drawCorner = (x, y) => {
+      ctx.beginPath();
+      ctx.arc(x, y, 8, 0, Math.PI * 2);
+      ctx.fill();
+    };
+    drawCorner(45, 45);
+    drawCorner(1155, 45);
+    drawCorner(45, 805);
+    drawCorner(1155, 805);
 
-  // Ribbon Header
-  ctx.fillStyle = '#b45309';
-  ctx.font = 'italic 20px serif';
-  ctx.fillText('This certifies that', 600, 240);
+    // Header Category / Logo
+    if (collegeLogo.complete && collegeLogo.naturalWidth > 0) {
+      const maxLogoWidth = 750;
+      const maxLogoHeight = 100;
+      const scale = Math.min(maxLogoWidth / collegeLogo.naturalWidth, maxLogoHeight / collegeLogo.naturalHeight);
+      const logoWidth = collegeLogo.naturalWidth * scale;
+      const logoHeight = collegeLogo.naturalHeight * scale;
+      ctx.drawImage(collegeLogo, 600 - logoWidth / 2, 60, logoWidth, logoHeight);
+    } else {
+      ctx.fillStyle = '#64748b';
+      ctx.font = '600 16px Inter, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.letterSpacing = '4px';
+      ctx.fillText('A I   E X A M   P L A T F O R M', 600, 120);
+    }
 
-  // Main Title
-  ctx.fillStyle = '#0f172a';
-  ctx.font = 'bold 54px Georgia, serif';
-  ctx.fillText('CERTIFICATE OF ACHIEVEMENT', 600, 190);
+    // Ribbon Header
+    ctx.fillStyle = '#b45309';
+    ctx.font = 'italic 20px serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('This certifies that', 600, 270);
+
+    // Main Title
+    ctx.fillStyle = '#0f172a';
+    ctx.font = 'bold 46px Georgia, serif';
+    ctx.fillText('Intro to AI/ML Workshop', 600, 225);
 
   // Student Name
   ctx.fillStyle = '#1e3a8a';
   ctx.font = 'bold 46px Georgia, serif';
-  ctx.fillText(result.studentName || 'Student Name', 600, 310);
+  ctx.fillText(result.studentName || 'Student Name', 600, 340);
 
   // Underline
   ctx.beginPath();
-  ctx.moveTo(350, 330);
-  ctx.lineTo(850, 330);
+  ctx.moveTo(350, 360);
+  ctx.lineTo(850, 360);
   ctx.strokeStyle = '#cbd5e1';
   ctx.lineWidth = 1;
   ctx.stroke();
@@ -88,12 +102,12 @@ const downloadCertificate = (result) => {
   // Completion Text
   ctx.fillStyle = '#475569';
   ctx.font = 'italic 20px serif';
-  ctx.fillText('has successfully completed the assessment', 600, 380);
+  ctx.fillText('has successfully completed the assessment', 600, 410);
 
   // Exam Title
   ctx.fillStyle = '#0f172a';
   ctx.font = 'bold 36px Georgia, serif';
-  ctx.fillText(`"${result.examTitle || 'Online Assessment'}"`, 600, 440);
+  ctx.fillText(`"${result.examTitle || 'Online Assessment'}"`, 600, 470);
 
   // Details Badge (Center)
   ctx.fillStyle = '#ffffff';
@@ -101,7 +115,7 @@ const downloadCertificate = (result) => {
   ctx.shadowBlur = 10;
   ctx.shadowOffsetY = 4;
   ctx.beginPath();
-  ctx.roundRect(380, 490, 440, 135, 12);
+  ctx.roundRect(380, 520, 440, 135, 12);
   ctx.fill();
   
   // Details Badge Borders
@@ -113,7 +127,7 @@ const downloadCertificate = (result) => {
   // Score
   ctx.fillStyle = '#0f172a';
   ctx.font = 'bold 24px Inter, sans-serif';
-  ctx.fillText(`Final Score: ${result.score}%`, 600, 535);
+  ctx.fillText(`Final Score: ${result.score}%`, 600, 565);
 
   // Awarded Date & Integrity
   const dateStr = result.submittedAt ? new Date(result.submittedAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'N/A';
@@ -121,12 +135,12 @@ const downloadCertificate = (result) => {
 
   ctx.fillStyle = '#475569';
   ctx.font = '500 15px Inter, sans-serif';
-  ctx.fillText(`Awarded on: ${dateStr}   |   ${intLabel}`, 600, 570);
+  ctx.fillText(`Awarded on: ${dateStr}   |   ${intLabel}`, 600, 600);
 
   // Certificate ID
   ctx.fillStyle = '#64748b';
   ctx.font = '400 13px Inter, sans-serif';
-  ctx.fillText(`Certificate ID: ${result.id}`, 600, 600);
+  ctx.fillText(`Certificate ID: ${result.id}`, 600, 630);
 
   // Lower Emblem / Seal
   const emblemY = 700;
@@ -155,6 +169,10 @@ const downloadCertificate = (result) => {
   link.download = `Certificate_${result.studentName?.replace(/\s+/g, '_') || 'Student'}.png`;
   link.href = canvas.toDataURL('image/png');
   link.click();
+  };
+
+  collegeLogo.onload = drawAndDownload;
+  collegeLogo.onerror = drawAndDownload;
 };
 
 const ResultPage = () => {

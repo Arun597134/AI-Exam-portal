@@ -97,49 +97,63 @@ const StudentDashboard = () => {
 };
 
 // Generate and download certificate as an image
+// Generate and download certificate as an image
 const downloadCertificate = (result) => {
-  const canvas = document.createElement('canvas');
-  canvas.width = 1200;
-  canvas.height = 850;
-  const ctx = canvas.getContext('2d');
+  const collegeLogo = new Image();
+  collegeLogo.src = '/college brand banner.jpg';
 
-  // Background
-  ctx.fillStyle = '#ffffff';
-  ctx.fillRect(0, 0, 1200, 850);
+  const drawAndDownload = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 1200;
+    canvas.height = 850;
+    const ctx = canvas.getContext('2d');
 
-  // Border
-  ctx.strokeStyle = '#4f46e5';
-  ctx.lineWidth = 6;
-  ctx.strokeRect(30, 30, 1140, 790);
+    // Background
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, 1200, 850);
 
-  // Inner border
-  ctx.strokeStyle = '#e2e8f0';
-  ctx.lineWidth = 2;
-  ctx.strokeRect(45, 45, 1110, 760);
-
-  // Decorative corner accents
-  const drawCorner = (x, y, dx, dy) => {
-    ctx.beginPath();
-    ctx.moveTo(x, y + dy * 40);
-    ctx.lineTo(x, y);
-    ctx.lineTo(x + dx * 40, y);
+    // Border
     ctx.strokeStyle = '#4f46e5';
-    ctx.lineWidth = 4;
-    ctx.stroke();
-  };
-  drawCorner(50, 50, 1, 1);
-  drawCorner(1150, 50, -1, 1);
-  drawCorner(50, 800, 1, -1);
-  drawCorner(1150, 800, -1, -1);
+    ctx.lineWidth = 6;
+    ctx.strokeRect(30, 30, 1140, 790);
 
-  // Top subtitle
-  ctx.fillStyle = '#64748b';
-  ctx.font = '500 16px Inter, sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('AI EXAM PLATFORM', 600, 110);
+    // Inner border
+    ctx.strokeStyle = '#e2e8f0';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(45, 45, 1110, 760);
 
-  // Gold award icon (circle)
-  ctx.beginPath();
+    // Decorative corner accents
+    const drawCorner = (x, y, dx, dy) => {
+      ctx.beginPath();
+      ctx.moveTo(x, y + dy * 40);
+      ctx.lineTo(x, y);
+      ctx.lineTo(x + dx * 40, y);
+      ctx.strokeStyle = '#4f46e5';
+      ctx.lineWidth = 4;
+      ctx.stroke();
+    };
+    drawCorner(50, 50, 1, 1);
+    drawCorner(1150, 50, -1, 1);
+    drawCorner(50, 800, 1, -1);
+    drawCorner(1150, 800, -1, -1);
+
+    // Top subtitle
+    if (collegeLogo.complete && collegeLogo.naturalWidth > 0) {
+      const maxLogoWidth = 750;
+      const maxLogoHeight = 100;
+      const scale = Math.min(maxLogoWidth / collegeLogo.naturalWidth, maxLogoHeight / collegeLogo.naturalHeight);
+      const logoWidth = collegeLogo.naturalWidth * scale;
+      const logoHeight = collegeLogo.naturalHeight * scale;
+      ctx.drawImage(collegeLogo, 600 - logoWidth / 2, 60, logoWidth, logoHeight);
+    } else {
+      ctx.fillStyle = '#64748b';
+      ctx.font = '500 16px Inter, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('AI EXAM PLATFORM', 600, 110);
+    }
+
+    // Gold award icon (circle)
+    ctx.beginPath();
   ctx.arc(600, 170, 30, 0, Math.PI * 2);
   ctx.fillStyle = '#fbbf24';
   ctx.fill();
@@ -147,10 +161,10 @@ const downloadCertificate = (result) => {
   ctx.font = 'bold 28px serif';
   ctx.fillText('★', 600, 180);
 
-  // Title
-  ctx.fillStyle = '#1e293b';
-  ctx.font = 'bold 42px Georgia, serif';
-  ctx.fillText('Certificate of Achievement', 600, 260);
+    // Title
+    ctx.fillStyle = '#1e293b';
+    ctx.font = 'bold 40px Georgia, serif';
+    ctx.fillText('Intro to AI/ML Workshop', 600, 260);
 
   // Divider line
   ctx.beginPath();
@@ -230,7 +244,7 @@ const downloadCertificate = (result) => {
   ctx.stroke();
   ctx.fillStyle = '#64748b';
   ctx.font = '400 12px Inter, sans-serif';
-  ctx.fillText('AI Exam Platform', 325, 780);
+    ctx.fillText('AI Exam Platform', 325, 780);
 
   // Signature line right  
   ctx.beginPath();
@@ -244,11 +258,15 @@ const downloadCertificate = (result) => {
   ctx.font = '400 10px Inter, sans-serif';
   ctx.fillText(`Certificate ID: ${result.id}`, 600, 815);
 
-  // Download
-  const link = document.createElement('a');
-  link.download = `Certificate_${result.studentName?.replace(/\s+/g, '_') || 'Student'}_${result.examTitle?.replace(/\s+/g, '_') || 'Exam'}.png`;
-  link.href = canvas.toDataURL('image/png');
-  link.click();
+    // Download
+    const link = document.createElement('a');
+    link.download = `Certificate_${result.studentName?.replace(/\s+/g, '_') || 'Student'}_${result.examTitle?.replace(/\s+/g, '_') || 'Exam'}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  };
+
+  collegeLogo.onload = drawAndDownload;
+  collegeLogo.onerror = drawAndDownload;
 };
 
 export default StudentDashboard;

@@ -50,8 +50,7 @@ const Login = () => {
   return (
     <div className="auth-container">
       <div className="card auth-card text-center">
-        <BrainCircuit size={48} className="text-primary mb-4" style={{ margin: '0 auto' }} />
-        <h2 className="text-2xl font-bold mb-2">AI Exam Portal</h2>
+        <img src="/logo.png" alt="St. Joseph's Institute of Technology" style={{ height: 64, width: 'auto', objectFit: 'contain', margin: '0 auto 1.5rem auto', display: 'block' }} />
         <p className="text-muted mb-6">Secure, Intelligent, Fair Assessment.</p>
 
         {error && (

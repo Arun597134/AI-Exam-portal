@@ -14,9 +14,8 @@ const Navbar = () => {
 
   return (
     <nav className="navbar">
-      <Link to="/" className="nav-brand" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-        <img src="/logo.png" alt="Logo" style={{ width: 32, height: 32, borderRadius: 8, objectFit: 'cover' }} />
-        AI Exam Platform
+      <Link to="/" className="nav-brand" style={{ display: 'flex', alignItems: 'center' }}>
+        <img src="/logo.png" alt="St. Joseph's Institute of Technology" style={{ height: 48, width: 'auto', objectFit: 'contain' }} />
       </Link>
       
       {user && (
